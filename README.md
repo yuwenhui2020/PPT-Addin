@@ -1,4 +1,6 @@
 # PPT-Addin
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fyuwenhui2020%2FPPT-Addin.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fyuwenhui2020%2FPPT-Addin?ref=badge_shield)
+
 这是一个ppt网页插件，可以在ppt内显示网页，使用要求为win10以上，安装了net 4.8和webview2，This is a PPT web plug-in, which can display web pages in PPT, and the use requirements are win10 or above, with net 4.8 and webview2 installed
 ### 使用说明
 ## 前提
@@ -12,3 +14,7 @@
 本产品支持的链接格式为http://、https://、file://。这三种格式前两种用于在线网站，第三者file协议用于本地文件，例如使用浏览器打开本地的html文件或者pdf文件，此时地址栏显示的链接就可以粘贴到网址输入框使用
 ## 免责声明
 本产品使用MIT开源协议，并承诺永远免费和无广告，以最精简的形式出现在大家眼中，若有功能建议或是bug留言，请提issue，
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fyuwenhui2020%2FPPT-Addin.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fyuwenhui2020%2FPPT-Addin?ref=badge_large)
