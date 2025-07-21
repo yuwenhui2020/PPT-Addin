@@ -1,4 +1,4 @@
-# PPT-Addin
+# PPT-Addin[最新版](https://github.com/yuwenhui2020/PPT-Addin/releases)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fyuwenhui2020%2FPPT-Addin.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fyuwenhui2020%2FPPT-Addin?ref=badge_shield)
 
 这是一个ppt网页插件，可以在ppt内显示网页，使用要求为win10以上，安装了net 4.8和webview2
@@ -8,7 +8,7 @@ This is a PPT web plug-in, which can display web pages in PPT, and the use requi
 已安装过的只需要将新版的所有文件复制到之前目录覆盖即可
 当然，重新安装也可以的
 ### 前提
-点击[下载链接](https://github.com/yuwenhui2020/PPT-Addin/releases/download/1.1.1/PowerPointAddIn.zip)进行下载，
+点击[下载链接](https://github.com/yuwenhui2020/PPT-Addin/releases/download/1.2/PowerPointAddIn.zip)进行下载，
 然后检查是否有webview2最新版,点击[webview2离线安装包](https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/038e5be3-91a2-4c14-b2eb-2fac728c8c2c/MicrosoftEdgeWebView2RuntimeInstallerX86.exe)下载，想在线安装则点击在线[下载链接](https://go.microsoft.com/fwlink/p/?LinkId=2124703)打开微软官网的下载地址下载在线安装包。
 并且需要确认电脑上安装有.NET Framework 4.8及以上版本,点击[webview2离线安装包](https://go.microsoft.com/fwlink/?linkid=2088631)下载，想在线安装则点击在线[下载链接](https://go.microsoft.com/fwlink/?LinkId=2085155)打开微软官网的下载地址下载在线安装包。
 确定上方所述的Microsoft.WebView2.Runtime和.NET Framework 4.8.Runtime都安装好即可直接开始使用本程序：先安装
