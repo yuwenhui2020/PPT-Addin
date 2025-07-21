@@ -1,24 +1,59 @@
-# PPT-Addin[最新版](https://github.com/yuwenhui2020/PPT-Addin/releases)
+# PPT-Addin☛[最新版下载页](https://github.com/yuwenhui2020/PPT-Addin/releases)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fyuwenhui2020%2FPPT-Addin.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fyuwenhui2020%2FPPT-Addin?ref=badge_shield)
 
-这是一个ppt网页插件，可以在ppt内显示网页，使用要求为win10以上，安装了net 4.8和webview2
+### 这是什么？
+这是一个用于PowerPoint的插件，可以在ppt内显示网页(自动打开)，也可以在局域网的网页中控制换页（需手动打开）
+### 与同类产品比较
+**任意修改**，本产品允许任何形式的修改和分发，只要别抹黑，咱们就是好朋友
+**无需登录**，本产品不需要任何登录也不会获取任何有关用户的数据
+**没有监控**，本产品不会像某同类产品一样获取并记录用户添加过的网页
+**完全免费**，本产品不需要您掏出一分钱即可直接使用
+**无需授权**，本产品不需要征得作者的同意即可用于任何场景的使用
+**功能正常**，经过十多个内部版本的迭代，目前已经没有会影响正常使用的bug了
+### 使用前提条件
+##### 系统要求
+使用要求为win10以上的Office 2013及以上，安装了net 4.8和webview2
+win7不保证可以使用，硬性重点是Office 2013及以上
+##### webview2最新版（其实不一定是最新版）
+点击[webview2离线安装包](https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/038e5be3-91a2-4c14-b2eb-2fac728c8c2c/MicrosoftEdgeWebView2RuntimeInstallerX86.exe)下载离线安装包
+想在线安装则点击[webview2在线安装包](https://go.microsoft.com/fwlink/p/?LinkId=2124703)下载在线安装包。
+##### .NET Framework 4.8及以上版本
+点击[.NET Framework 4.8离线安装包](https://go.microsoft.com/fwlink/?linkid=2088631)下载
+想在线安装则点击[.NET Framework 4.8在线安装包](https://go.microsoft.com/fwlink/?LinkId=2085155)下载在线安装包。
+### 配置此插件
+##### 安装
+点击[下载页](https://github.com/yuwenhui2020/PPT-Addin/releases)选择最新的PowerPointAddIn.zip并下载，
+然后在电脑的数据保存目录将压缩包解压，然后点击“安装工具.bat”进行快速安装
+##### 卸载
+打开[PowerPoint]-[文件]菜单-右下角[选项]-左侧[加载项]-管理:COM加载项[转到]-左侧[PowerPointAddIn]-右侧[删除]
+##### 更新
+已安装过的只需要将新版的所有文件复制到之前目录覆盖即可，当然，重新[安装]到任意位置也可以
+### 使用-插入网页
+##### 插入在线网页
+把想要显示的网页链接直接复制进插件的网址输入框，然后点击“添加网页”
+##### 插入本地文件（绝对路径版）
+使用浏览器打开本地的html文件或者pdf文件
+此时地址栏显示的链接就可以粘贴到插件的网址输入框，然后点击“添加网页”
+##### 插入本地文件（相对路径版）
+只需在上一条的基础上，点击“此为相对路径”即可，然后点击“添加网页”
+### 使用-网页控制台
+##### 启动与关闭
+点击PowerPoint窗口上方的菜单栏，找到“网页插件”点击第二项“Web控制台”
+点击一下会启动并显示“Web控制台已启动，请访问XXXX”，此时打开了服务
+在点击一下的基础上再点击一下，会显示“Web控制台已关闭”，此时关闭了服务
+##### 使用Web控制台
+在前一步中打开Web控制台后，根据提示在浏览器输入链接并回车即可访问Web控制台
+如果是“此台”电脑正在使用，点击[快速入口](http://localhost:8888)可直接访问Web控制台对PowerPoint进行控制
+如果是“此台”电脑的局域网设备，可以使用`Win+R`-`CMD`-`ipconfig`相关指令
+然后找到“IPv4 地址”右侧的数字加点的内容，输入到局域网设备（如手机）的浏览器，再加上:8888，如
+> 192，168.1.10:8888 
+172.16.0.10:8888
+10.0.0.10:8888
 
-This is a PPT web plug-in, which can display web pages in PPT, and the use requirements are win10 or above, with net 4.8 and webview2 installed
-## 使用说明
-已安装过的只需要将新版的所有文件复制到之前目录覆盖即可
-当然，重新安装也可以的
-### 前提
-点击[下载链接](https://github.com/yuwenhui2020/PPT-Addin/releases/download/1.2/PowerPointAddIn.zip)进行下载，
-然后检查是否有webview2最新版,点击[webview2离线安装包](https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/038e5be3-91a2-4c14-b2eb-2fac728c8c2c/MicrosoftEdgeWebView2RuntimeInstallerX86.exe)下载，想在线安装则点击在线[下载链接](https://go.microsoft.com/fwlink/p/?LinkId=2124703)打开微软官网的下载地址下载在线安装包。
-并且需要确认电脑上安装有.NET Framework 4.8及以上版本,点击[webview2离线安装包](https://go.microsoft.com/fwlink/?linkid=2088631)下载，想在线安装则点击在线[下载链接](https://go.microsoft.com/fwlink/?LinkId=2085155)打开微软官网的下载地址下载在线安装包。
-确定上方所述的Microsoft.WebView2.Runtime和.NET Framework 4.8.Runtime都安装好即可直接开始使用本程序：先安装
-### 安装
-只需要点击PowerPointAddIn.zip解压到一个不会删除文件的目录（例如c:\\），解压文件夹的所有文件后使用“安装工具.bat”进行安装，安装完毕后打开PowerPoint即可开始使用，此时进入任一文档的编辑模式后便会在右侧的侧栏出现添加网页地址的控件，直接写在线链接地址即可预览
-### 使用
-本产品支持的链接格式为http://、https://、file://。这三种格式前两种用于在线网站，第三者file协议用于本地文件，例如使用浏览器打开本地的html文件或者pdf文件，此时地址栏显示的链接就可以粘贴到网址输入框使用
+类似以上三种地址的内容（需为IPv4 地址右侧显示的内容），即可访问Web控制台进行控制
 ### 免责声明
-本产品使用MIT开源协议，并承诺永远免费和无广告，以最精简的形式出现在大家眼中，若有功能建议或是bug留言，请提issue，
-有空再详细的制作说明书😂
+本产品使用MIT开源协议，承诺**永远免费和无广告，以最精简的形式出现在大家眼中**
+若有功能建议或是bug留言，请提issue，
 
-## License
+### License
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fyuwenhui2020%2FPPT-Addin.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fyuwenhui2020%2FPPT-Addin?ref=badge_large)
