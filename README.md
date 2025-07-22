@@ -18,6 +18,7 @@
 ### 使用前提条件
 ##### 系统要求
 使用要求为win10以上的Office 2013及以上，安装了net 4.8和webview2
+
 win7不保证可以使用，硬性重点是Office 2013及以上
 ##### webview2最新版（其实不一定是最新版）
 点击[webview2离线安装包](https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/038e5be3-91a2-4c14-b2eb-2fac728c8c2c/MicrosoftEdgeWebView2RuntimeInstallerX86.exe)下载离线安装包
@@ -29,7 +30,7 @@ win7不保证可以使用，硬性重点是Office 2013及以上
 ##### 安装
 点击[下载页](https://github.com/yuwenhui2020/PPT-Addin/releases)选择最新的PowerPointAddIn.zip并下载，
 然后在电脑的数据保存目录将压缩包解压，然后点击“安装工具.bat”进行快速安装
-#####WPS安装
+##### WPS安装
 在[安装]的基础上，需要打开[WPS]-打开任意ppt文件-左上角[文件]-新菜单的[选项]-左侧[信任中心]-下方[受信任的加载项]-[启用所有第三方COM加载项，重启WPS后生效(E)]-勾选并确认，关闭WPS重启即可
 ##### 卸载
 打开[PowerPoint]-[文件]菜单-右下角[选项]-左侧[加载项]-管理:COM加载项[转到]-左侧[PowerPointAddIn]-右侧[删除]
