@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui" xmlns:x="urn:schemas-microsoft-com:office:office" onLoad="Ribbon_Load">
+	<ribbon>
+    <tabs>
+		<tab idMso="TabAddIns" label="PPT插件" getVisible="GetVisible">
+        <group id="insertweb" label="添加网页">
+          <button id="TogglePanelButton" 
+                  label="面板开关" 
+                  size="large"
+                  onAction="TogglePanel"
+                  imageMso="HappyFace" />
+        </group>
+      </tab>
+    </tabs>
+  </ribbon>
+</customUI>

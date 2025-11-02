@@ -1,0 +1,1 @@
+reg add "HKEY_CURRENT_USER\SOFTWARE\Kingsoft\Office\WPP\AddinsWL" /v "PowerPointAddIn" /t REG_SZ /d "" /f
