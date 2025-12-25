@@ -47,7 +47,7 @@ wps ppt和ms office powerpoint的支持
 ### 使用前提条件
 ##### 系统要求
 使用要求为win10以上的Office 2013及以上，安装了net 4.8和webview2
-
+现在win11系统也可以正常使用了，请使用最新版安装脚本
 win7不保证可以使用，硬性重点是Office 2013及以上
 ##### webview2最新版（其实不一定是最新版）
 点击[webview2离线安装包](https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/038e5be3-91a2-4c14-b2eb-2fac728c8c2c/MicrosoftEdgeWebView2RuntimeInstallerX86.exe)下载离线安装包
