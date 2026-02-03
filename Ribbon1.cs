@@ -20,9 +20,21 @@ namespace PowerPointAddIn
         public Ribbon1()
         {
         }
+        public void ToggleWebConsole(Office.IRibbonControl control)
+        {
+            Globals.ThisAddIn.ToggleWebConsole();
+        }
         public void TogglePanel(Office.IRibbonControl control)
         {
             Globals.ThisAddIn.ToggleTaskPane();
+        }
+        public void ToggleQRCodePanel(Office.IRibbonControl control)
+        {
+            Globals.ThisAddIn.ToggleQRCodePanel();
+        }
+        public void ToggleSymbolPanel(Office.IRibbonControl control)
+        {
+            Globals.ThisAddIn.ToggleSymbolPanel();
         }
         public bool GetVisible(Office.IRibbonControl control)
         {

@@ -10,6 +10,27 @@
                   onAction="TogglePanel"
                   imageMso="HappyFace" />
         </group>
+		<group id="webcontrol" label="网页控制">
+          <button id="WebConsoleButton" 
+				  label="Web控制台" 
+				  size="large"
+				  onAction="ToggleWebConsole"
+				  imageMso="SlideShowInAWindow" />
+        </group>
+		  <group id="qrcode" label="二维码">
+			  <button id="ToggleQRCodePanelButton"
+					  label="添加二维码"
+					  size="large"
+					  onAction="ToggleQRCodePanel"
+					  imageMso="InsertInlineFrame" />
+	     </group>
+		 <group id="symbols" label="特殊符号">
+			<button id="ToggleSymbolPanelButton"
+					label="添加符号"
+					size="large"
+					onAction="ToggleSymbolPanel"
+					imageMso="SymbolInsertGallery" />
+		</group>
       </tab>
     </tabs>
   </ribbon>

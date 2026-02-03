@@ -1,0 +1,546 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>PPT Web控制台</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta charset="utf-8" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1920px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        .control-panel {
+            margin-bottom: 20px;
+            background-color: #ffffff;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 100%;
+            border: 0px solid black;
+        }
+
+        th, td {
+            border: 0px solid black;
+            text-align: center;
+        }
+
+        button {
+            width: 100%;
+            display: inline-block;
+            padding: 10% 5%;
+            margin: 0px 0px;
+            font-size: 3vh;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 55px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+            button:hover {
+                background-color: #45a049;
+            }
+
+            button:disabled {
+                background-color: #cccccc;
+                cursor: not-allowed;
+            }
+
+        .status {
+            margin-top: 10px;
+            background-color: #ffffff;
+            border-radius: 4px;
+        }
+
+        #screenCanvas {
+            border: 0px solid #ddd;
+            margin-top: 20px;
+            background-color: #000;
+            cursor: crosshair;
+        }
+
+        .coordinates {
+            margin-top: 10px;
+            font-family: monospace;
+        }
+
+        #screenContainer {
+            max-width: 100%;
+            margin-top: -15px;
+        }
+
+        #screenCanvas {
+            border: 1px solid #ddd;
+            background-color: #000;
+            cursor: crosshair;
+            display: block;
+        }
+
+        .btn-start {
+            background-color: #2196F3;
+        }
+
+        .btn-stop {
+            background-color: #f44336;
+        }
+
+        .screenBtn {
+            padding: 5% 5%;
+        }
+        .input-section {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 5px;
+        }
+
+        #textInput {
+            width: 70%;
+            margin: 0px 0px 10px 0px ;
+            padding: 20px 0px 15px 10px;
+            border: 1px solid #ddd;
+            border-radius: 15px;
+            resize: vertical;
+            font-size: 100%;
+            float: left;
+        }
+
+        #sendTextBtn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 0px 0px 10px 0px;
+            padding: 13px 5px 17px 5px;
+            font-size: 100%;
+            width: 20%;
+            float: right;
+        }
+        .input-group {
+            padding: 15px 10px 20px 20px;
+        }
+
+        #sendTextBtn:hover {
+            background-color: #45a049;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="input-group">
+            <input type="text" id="textInput" placeholder="输入文本..." autocomplete="off">
+            <button id="sendTextBtn">发送</button>
+        </div>
+
+        <button id="screenBtn" class='screenBtn'>屏幕共享</button>
+        <div>
+            <div class="status" id="status">状态: 未连接</div>
+            <div id="screenContainer">
+                <canvas id="screenCanvas"></canvas>
+            </div>
+            <div class="coordinates" id="coordinates">坐标:(0,0)|屏幕分辨率:未获取</div>
+        </div>
+
+        <div class="control-panel">
+            <table>
+                <tr>
+                    <td>
+                        <button id="startBtn" class='btn-start'>开始放映</button>
+                    </td>
+                    <td>
+                        <button id="stopBtn" class='btn-stop'>停止放映</button><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button id="prevBtn">上一动画</button>
+                    </td>
+                    <td>
+                        <button id="nextBtn">下一动画</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button id="firstBtn">首个页面</button>
+                    </td>
+                    <td>
+                        <button id="lastBtn">最后一页</button>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const startBtn = document.getElementById('startBtn');
+                const stopBtn = document.getElementById('stopBtn');
+                const prevBtn = document.getElementById('prevBtn');
+                const nextBtn = document.getElementById('nextBtn');
+                const firstBtn = document.getElementById('firstBtn');
+                const lastBtn = document.getElementById('lastBtn');
+                const screenBtn = document.getElementById('screenBtn');
+                const statusDiv = document.getElementById('status');
+                const canvas = document.getElementById('screenCanvas');
+                const ctx = canvas.getContext('2d');
+                const coordinatesDiv = document.getElementById('coordinates');
+
+                let isScreenSharing = false;
+                let screenSocket = null;
+                let screenScaleX = 1;
+                let screenScaleY = 1;
+                let screenOffsetX = 0;
+                let screenOffsetY = 0;
+                let screenWidth = 1920; // 默认值
+                let screenHeight = 1080; // 默认值
+                let screenInfo = {
+                    width: 1920,
+                    height: 1080,
+                    offsetX: 0,
+                    offsetY: 0,
+                    captureWidth: 1920,
+                    captureHeight: 1080
+                };
+
+                // 更新状态显示
+                function updateStatus(text) {
+                    statusDiv.textContent = `状态: ${text}`;
+                }
+
+                // 更新坐标显示
+                function updateCoordinates(x, y) {
+                    coordinatesDiv.textContent =
+                        `坐标:(${x},${y})|屏幕:${screenInfo.width}x${screenInfo.height}|`;
+                    //`捕获:${screenInfo.captureWidth}x${screenInfo.captureHeight}|` +
+                    //`偏移:(${screenInfo.offsetX},${screenInfo.offsetY})`;
+                }
+                function calculateScreenCoordinates(canvasX, canvasY) {
+                    // 1. 将Canvas坐标转换为捕获图像坐标
+                    let captureX = (canvasX - screenOffsetX) / screenScaleX;
+                    let captureY = (canvasY - screenOffsetY) / screenScaleY;
+
+                    // 2. 将捕获图像坐标转换为实际屏幕坐标
+                    let screenX = (captureX / screenInfo.captureWidth) * screenInfo.width + screenInfo.offsetX;
+                    let screenY = (captureY / screenInfo.captureHeight) * screenInfo.height + screenInfo.offsetY;
+
+                    return {
+                        x: Math.floor(screenX),
+                        y: Math.floor(screenY)
+                    };
+                }
+                // 调整Canvas大小以匹配屏幕比例
+                function resizeCanvas() {
+                    const container = document.getElementById('screenContainer');
+                    const containerWidth = container.clientWidth;
+
+                    // 根据屏幕比例计算Canvas大小
+                    const aspectRatio = screenWidth / screenHeight;
+                    let canvasWidth = containerWidth;
+                    let canvasHeight = containerWidth / aspectRatio;
+
+                    // 限制最大高度
+                    const maxHeight = window.innerHeight * 0.6;
+                    if (canvasHeight > maxHeight) {
+                        canvasHeight = maxHeight;
+                        canvasWidth = canvasHeight * aspectRatio;
+                    }
+
+                    // 设置Canvas尺寸
+                    canvas.width = canvasWidth;
+                    canvas.height = canvasHeight;
+
+                    // 设置Canvas显示尺寸
+                    canvas.style.width = canvasWidth + 'px';
+                    canvas.style.height = canvasHeight + 'px';
+
+                    console.log(`Canvas大小调整为: ${canvasWidth}x${canvasHeight}`);
+                }
+
+                // 窗口大小改变时重新调整Canvas
+                window.addEventListener('resize', resizeCanvas);
+
+                // 发送命令到服务器
+                function sendCommand(cmd) {
+                    fetch('/control', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ cmd: cmd })
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('网络响应不正常');
+                            }
+                            return response.text();
+                        })
+                        .then(data => {
+                            updateStatus(data);
+                            if (data === 'OK') {
+                                checkStatus();
+                            }
+                        })
+                        .catch(error => {
+                            updateStatus(`错误: ${error.message}`);
+                            console.error('命令发送错误:', error);
+                        });
+                }
+
+                // 检查当前状态
+                function checkStatus() {
+                    fetch('/control?cmd=status')
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('状态检查失败');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            updateStatus(`已连接 - 当前幻灯片: ${data.currentSlide}/${data.totalSlides}`);
+                        })
+                        .catch(error => {
+                            updateStatus('连接错误');
+                            console.error('状态检查错误:', error);
+                        });
+                }
+
+                // 开始屏幕共享
+                function startScreenSharing() {
+                    if (screenSocket) {
+                        screenSocket.close();
+                    }
+
+                    const wsUrl = `ws://${window.location.hostname}:8887/screen`;
+                    screenSocket = new WebSocket(wsUrl);
+
+                    screenSocket.onopen = function () {
+                        isScreenSharing = true;
+                        screenBtn.textContent = '停止屏幕共享';
+                        updateStatus('屏幕共享已连接');
+                    };
+
+                    screenSocket.onmessage = function (event) {
+                        if (event.data instanceof Blob) {
+                            // 处理图像数据
+                            const blob = event.data;
+                            const url = URL.createObjectURL(blob);
+                            const img = new Image();
+
+                            img.onload = function () {
+                                // 计算缩放比例和偏移量
+                                const canvasAspect = canvas.width / canvas.height;
+                                const imgAspect = img.width / img.height;
+
+                                if (imgAspect > canvasAspect) {
+                                    // 图片比画布宽
+                                    screenScaleX = canvas.width / img.width;
+                                    screenScaleY = screenScaleX;
+                                    screenOffsetX = 0;
+                                    screenOffsetY = (canvas.height - img.height * screenScaleY) / 2;
+                                } else {
+                                    // 图片比画布高
+                                    screenScaleY = canvas.height / img.height;
+                                    screenScaleX = screenScaleY;
+                                    screenOffsetX = (canvas.width - img.width * screenScaleX) / 2;
+                                    screenOffsetY = 0;
+                                }
+
+                                // 绘制图像
+                                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                                ctx.drawImage(img, screenOffsetX, screenOffsetY,
+                                    img.width * screenScaleX, img.height * screenScaleY);
+
+                                URL.revokeObjectURL(url);
+                            };
+
+                            img.src = url;
+                        } else {
+                            // 处理文本消息（屏幕分辨率信息）
+                            try {
+                                const data = JSON.parse(event.data);
+                                if (data.action === "screenInfo") {
+                                    // 更新屏幕信息
+                                    screenInfo = {
+                                        width: data.width,
+                                        height: data.height,
+                                        offsetX: data.offsetX,
+                                        offsetY: data.offsetY,
+                                        captureWidth: data.captureWidth,
+                                        captureHeight: data.captureHeight
+                                    };
+                                    updateCoordinates(0, 0);
+                                    resizeCanvas();
+                                }
+                            } catch (e) {
+                                console.log('收到消息:', event.data);
+                            }
+                        }
+                    };
+
+                    screenSocket.onclose = function () {
+                        isScreenSharing = false;
+                        screenBtn.textContent = '开始屏幕共享';
+                        updateStatus('屏幕共享已断开');
+                        console.log('WebSocket连接已关闭');
+                    };
+
+                    screenSocket.onerror = function (error) {
+                        console.error('WebSocket错误:', error);
+                        updateStatus('屏幕共享连接错误');
+                    };
+                }
+
+                // 停止屏幕共享
+                function stopScreenSharing() {
+                    if (screenSocket) {
+                        screenSocket.close();
+                        screenSocket = null;
+                    }
+                    isScreenSharing = false;
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    screenBtn.textContent = '开始屏幕共享';
+                    updateStatus('屏幕共享已停止');
+                }
+
+                // 按钮事件监听
+                startBtn.addEventListener('click', () => sendCommand('start'));
+                stopBtn.addEventListener('click', () => sendCommand('stop'));
+                prevBtn.addEventListener('click', () => sendCommand('prev'));
+                nextBtn.addEventListener('click', () => sendCommand('next'));
+                firstBtn.addEventListener('click', () => sendCommand('first'));
+                lastBtn.addEventListener('click', () => sendCommand('last'));
+
+                screenBtn.addEventListener('click', () => {
+                    if (isScreenSharing) {
+                        stopScreenSharing();
+                    } else {
+                        startScreenSharing();
+                    }
+                });
+
+                // 画布鼠标移动事件 - 显示坐标
+                canvas.addEventListener('mousemove', (e) => {
+                    const rect = canvas.getBoundingClientRect();
+                    const canvasX = e.clientX - rect.left;
+                    const canvasY = e.clientY - rect.top;
+
+                    // 计算原始屏幕坐标
+                    const screenCoords = calculateScreenCoordinates(canvasX, canvasY);
+                    updateCoordinates(screenCoords.x, screenCoords.y);
+                });
+
+                canvas.addEventListener('click', (e) => {
+                    if (!isScreenSharing || !screenSocket || screenSocket.readyState !== WebSocket.OPEN) {
+                        return;
+                    }
+
+                    const rect = canvas.getBoundingClientRect();
+                    const canvasX = e.clientX - rect.left;
+                    const canvasY = e.clientY - rect.top;
+
+                    // 计算原始屏幕坐标
+                    const screenCoords = calculateScreenCoordinates(canvasX, canvasY);
+
+                    // 发送点击命令
+                    try {
+                        screenSocket.send(JSON.stringify({
+                            action: 'click',
+                            x: screenCoords.x,
+                            y: screenCoords.y
+                        }));
+                    } catch (error) {
+                        console.error('发送点击命令失败:', error);
+                    }
+                });
+
+                // 初始状态检查
+                checkStatus();
+                resizeCanvas();
+                setInterval(checkStatus, 5000);
+                startScreenSharing();
+            });
+        </script>
+        <script>
+            // 初始化 WebSocket 连接
+            function initWebSocket() {
+                const wsUrl = `ws://${window.location.hostname}:8889/ws`;
+                socket = new WebSocket(wsUrl);
+
+                // 连接成功时
+                socket.onopen = function (e) {
+                    console.log("WebSocket 连接已建立");
+                    // 将 socket 设为全局变量
+                    window.socket = socket;
+                };
+
+                // 接收消息时
+                socket.onmessage = function (event) {
+                    console.log("收到消息:", event.data);
+                };
+
+                // 连接关闭时
+                socket.onclose = function (event) {
+                    if (event.wasClean) {
+                        console.log(`连接已关闭，代码=${event.code} 原因=${event.reason}`);
+                    } else {
+                        console.log('连接中断');
+                    }
+                };
+
+                // 发生错误时
+                socket.onerror = function (error) {
+                    console.log(`WebSocket 错误: ${error.message}`);
+                };
+            }
+
+            // 页面加载完成后初始化 WebSocket
+            document.addEventListener('DOMContentLoaded', function () {
+                initWebSocket();
+
+                // 发送文本功能
+                document.getElementById('sendTextBtn').addEventListener('click', function () {
+                    if (!window.socket || window.socket.readyState !== WebSocket.OPEN) {
+                        console.error("WebSocket 连接未就绪");
+                        return;
+                    }
+
+                    const text = document.getElementById('textInput').value;
+                    if (text && text.trim() !== '') {
+                        window.socket.send(JSON.stringify({
+                            action: 'textInput',
+                            text: text
+                        }));
+                        document.getElementById('textInput').value = '';
+                    }
+                });
+
+                // 添加回车键支持
+                document.getElementById('textInput').addEventListener('keypress', function (e) {
+                    if (e.key === 'Enter') {
+                        document.getElementById('sendTextBtn').click();
+                    }
+                });
+            });
+        </script>
+</body>
+</html>

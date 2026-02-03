@@ -5,6 +5,9 @@
         private System.ComponentModel.IContainer components = null;
         private System.Windows.Forms.CheckBox chkRelativePath;
         private System.Windows.Forms.Button btnBrowse;
+        private System.Windows.Forms.PictureBox qrCodePictureBox;
+        private System.Windows.Forms.Button btnToggleConsole;
+        private System.Windows.Forms.Label lblConsoleStatus;
 
         protected override void Dispose(bool disposing)
         {
@@ -18,6 +21,9 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.Label label4;
+            this.btnToggleConsole = new System.Windows.Forms.Button();
+            this.lblConsoleStatus = new System.Windows.Forms.Label();
+            this.qrCodePictureBox = new System.Windows.Forms.PictureBox();
             this.txtUrl = new System.Windows.Forms.TextBox();
             this.numWidth = new System.Windows.Forms.NumericUpDown();
             this.numHeight = new System.Windows.Forms.NumericUpDown();
@@ -28,7 +34,12 @@
             this.label5 = new System.Windows.Forms.Label();
             this.chkRelativePath = new System.Windows.Forms.CheckBox();
             this.btnBrowse = new System.Windows.Forms.Button();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
             label4 = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.qrCodePictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numHeight)).BeginInit();
             this.SuspendLayout();
@@ -41,10 +52,46 @@
             label4.Location = new System.Drawing.Point(11, 181);
             label4.Margin = new System.Windows.Forms.Padding(3);
             label4.Name = "label4";
-            label4.Size = new System.Drawing.Size(185, 102);
+            label4.Size = new System.Drawing.Size(191, 119);
             label4.TabIndex = 7;
-            label4.Text = "本插件可以向当前显示的PPT页面\r\n添加一个控件用于显示网页\r\n链接输入栏可用协议如：\r\nhttp://\r\nhttps://\r\nfile://";
+            label4.Text = "本插件可以向当前显示的PPT页面\r\n添加一个控件用于显示网页\r\n链接输入栏可用协议如：\r\nhttp://\r\nhttps://\r\nfile://\r\n首次运行WEB控" +
+    "制台前需要初始化";
             label4.Click += new System.EventHandler(this.label4_Click);
+            // 
+            // btnToggleConsole
+            // 
+            this.btnToggleConsole.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnToggleConsole.Location = new System.Drawing.Point(14, 308);
+            this.btnToggleConsole.Name = "btnToggleConsole";
+            this.btnToggleConsole.Size = new System.Drawing.Size(247, 28);
+            this.btnToggleConsole.TabIndex = 11;
+            this.btnToggleConsole.Text = "开启控制台";
+            this.btnToggleConsole.UseVisualStyleBackColor = true;
+            this.btnToggleConsole.Click += new System.EventHandler(this.btnToggleConsole_Click);
+            // 
+            // lblConsoleStatus
+            // 
+            this.lblConsoleStatus.AutoSize = true;
+            this.lblConsoleStatus.Location = new System.Drawing.Point(13, 344);
+            this.lblConsoleStatus.Name = "lblConsoleStatus";
+            this.lblConsoleStatus.Size = new System.Drawing.Size(77, 12);
+            this.lblConsoleStatus.TabIndex = 12;
+            this.lblConsoleStatus.Text = "控制台未启用";
+            this.lblConsoleStatus.Click += new System.EventHandler(this.lblConsoleStatus_Click);
+            // 
+            // qrCodePictureBox
+            // 
+            this.qrCodePictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.qrCodePictureBox.Location = new System.Drawing.Point(15, 381);
+            this.qrCodePictureBox.Name = "qrCodePictureBox";
+            this.qrCodePictureBox.Size = new System.Drawing.Size(247, 207);
+            this.qrCodePictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.qrCodePictureBox.TabIndex = 13;
+            this.qrCodePictureBox.TabStop = false;
+            this.qrCodePictureBox.Visible = false;
+            this.qrCodePictureBox.Click += new System.EventHandler(this.qrCodePictureBox_Click);
             // 
             // txtUrl
             // 
@@ -180,10 +227,62 @@
             this.btnBrowse.UseVisualStyleBackColor = true;
             this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
             // 
+            // label6
+            // 
+            this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label6.AutoSize = true;
+            this.label6.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            this.label6.Location = new System.Drawing.Point(143, 238);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(119, 12);
+            this.label6.TabIndex = 15;
+            this.label6.Text = "初始化WEB控制台点我";
+            this.label6.Click += new System.EventHandler(this.label6_Click);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.BackColor = System.Drawing.Color.Transparent;
+            this.label7.Location = new System.Drawing.Point(110, 24);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(77, 12);
+            this.label7.TabIndex = 16;
+            this.label7.Text = "添加二维码？";
+            this.label7.Click += new System.EventHandler(this.label7_Click);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.BackColor = System.Drawing.Color.Transparent;
+            this.label8.Location = new System.Drawing.Point(111, 43);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(65, 12);
+            this.label8.TabIndex = 17;
+            this.label8.Text = "添加符号？";
+            this.label8.Click += new System.EventHandler(this.label8_Click);
+            // 
+            // label9
+            // 
+            this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(208, 259);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(47, 12);
+            this.label9.TabIndex = 18;
+            this.label9.Text = "有bug？";
+            this.label9.Click += new System.EventHandler(this.label9_Click);
+            // 
             // WebViewPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.qrCodePictureBox);
+            this.Controls.Add(this.lblConsoleStatus);
+            this.Controls.Add(this.btnToggleConsole);
             this.Controls.Add(this.label5);
             this.Controls.Add(label4);
             this.Controls.Add(this.label3);
@@ -197,6 +296,7 @@
             this.Controls.Add(this.chkRelativePath);
             this.Name = "WebViewPanel";
             this.Size = new System.Drawing.Size(277, 746);
+            ((System.ComponentModel.ISupportInitialize)(this.qrCodePictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numHeight)).EndInit();
             this.ResumeLayout(false);
@@ -212,5 +312,9 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
     }
 }
