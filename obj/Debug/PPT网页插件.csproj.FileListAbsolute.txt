@@ -1,0 +1,54 @@
+C:\root\code\pptadd\新版8添加符号多显示器 - 副本\obj\Debug\PPT网页插件.csproj.AssemblyReference.cache
+C:\root\code\pptadd\新版8添加符号多显示器 - 副本\obj\Debug\PPT网页插件.csproj.ResolveComReference.cache
+C:\root\code\pptadd\新版8添加符号多显示器 - 副本\obj\Debug\PowerPointAddIn.ContactForm.resources
+C:\root\code\pptadd\新版8添加符号多显示器 - 副本\obj\Debug\PowerPointAddIn.WebBrowserForm.resources
+C:\root\code\pptadd\新版8添加符号多显示器 - 副本\obj\Debug\PowerPointAddIn.QRCodePanel.resources
+C:\root\code\pptadd\新版8添加符号多显示器 - 副本\obj\Debug\PowerPointAddIn.WebViewPanel.resources
+C:\root\code\pptadd\新版8添加符号多显示器 - 副本\obj\Debug\PPT网页插件.csproj.GenerateResource.cache
+C:\root\code\pptadd\新版8添加符号多显示器 - 副本\bin\Debug\runtimes\win-x86\native\WebView2Loader.dll
+C:\root\code\pptadd\新版8添加符号多显示器 - 副本\bin\Debug\runtimes\win-x64\native\WebView2Loader.dll
+C:\root\code\pptadd\新版8添加符号多显示器 - 副本\bin\Debug\runtimes\win-arm64\native\WebView2Loader.dll
+C:\root\code\pptadd\新版8添加符号多显示器 - 副本\bin\Debug\PowerPointAddIn.dll
+C:\root\code\pptadd\新版8添加符号多显示器 - 副本\bin\Debug\PowerPointAddIn.dll.manifest
+C:\root\code\pptadd\新版8添加符号多显示器 - 副本\bin\Debug\PowerPointAddIn.vsto
+C:\root\code\pptadd\新版8添加符号多显示器 - 副本\bin\Debug\Microsoft.Office.Tools.Common.v4.0.Utilities.dll
+C:\root\code\pptadd\新版8添加符号多显示器 - 副本\bin\Debug\Microsoft.Web.WebView2.Core.dll
+C:\root\code\pptadd\新版8添加符号多显示器 - 副本\bin\Debug\Microsoft.Web.WebView2.WinForms.dll
+C:\root\code\pptadd\新版8添加符号多显示器 - 副本\bin\Debug\Microsoft.Web.WebView2.Wpf.dll
+C:\root\code\pptadd\新版8添加符号多显示器 - 副本\bin\Debug\Newtonsoft.Json.dll
+C:\root\code\pptadd\新版8添加符号多显示器 - 副本\bin\Debug\QRCoder.dll
+C:\root\code\pptadd\新版8添加符号多显示器 - 副本\bin\Debug\Microsoft.Web.WebView2.Core.xml
+C:\root\code\pptadd\新版8添加符号多显示器 - 副本\bin\Debug\Microsoft.Web.WebView2.WinForms.xml
+C:\root\code\pptadd\新版8添加符号多显示器 - 副本\bin\Debug\Microsoft.Web.WebView2.Wpf.xml
+C:\root\code\pptadd\新版8添加符号多显示器 - 副本\bin\Debug\Newtonsoft.Json.xml
+C:\root\code\pptadd\新版8添加符号多显示器 - 副本\obj\Debug\PowerPointAddIn.Properties.Resources.resources
+C:\root\code\pptadd\新版8添加符号多显示器 - 副本\obj\Debug\PPT网页插件.csproj.CoreCompileInputs.cache
+C:\root\code\pptadd\新版8添加符号多显示器 - 副本\obj\Debug\PPT网页插件.csproj.Up2Date
+C:\root\code\pptadd\新版8添加符号多显示器 - 副本\obj\Debug\PowerPointAddIn.dll
+C:\root\githubcode\PPT-Addin\bin\Debug\runtimes\win-x86\native\WebView2Loader.dll
+C:\root\githubcode\PPT-Addin\bin\Debug\runtimes\win-x64\native\WebView2Loader.dll
+C:\root\githubcode\PPT-Addin\bin\Debug\runtimes\win-arm64\native\WebView2Loader.dll
+C:\root\githubcode\PPT-Addin\bin\Debug\PowerPointAddIn.dll
+C:\root\githubcode\PPT-Addin\bin\Debug\PowerPointAddIn.dll.manifest
+C:\root\githubcode\PPT-Addin\bin\Debug\PowerPointAddIn.vsto
+C:\root\githubcode\PPT-Addin\bin\Debug\Microsoft.Office.Tools.Common.v4.0.Utilities.dll
+C:\root\githubcode\PPT-Addin\bin\Debug\Microsoft.Web.WebView2.Core.dll
+C:\root\githubcode\PPT-Addin\bin\Debug\Microsoft.Web.WebView2.WinForms.dll
+C:\root\githubcode\PPT-Addin\bin\Debug\Microsoft.Web.WebView2.Wpf.dll
+C:\root\githubcode\PPT-Addin\bin\Debug\Newtonsoft.Json.dll
+C:\root\githubcode\PPT-Addin\bin\Debug\QRCoder.dll
+C:\root\githubcode\PPT-Addin\bin\Debug\Microsoft.Web.WebView2.Core.xml
+C:\root\githubcode\PPT-Addin\bin\Debug\Microsoft.Web.WebView2.WinForms.xml
+C:\root\githubcode\PPT-Addin\bin\Debug\Microsoft.Web.WebView2.Wpf.xml
+C:\root\githubcode\PPT-Addin\bin\Debug\Newtonsoft.Json.xml
+C:\root\githubcode\PPT-Addin\obj\Debug\PPT网页插件.csproj.AssemblyReference.cache
+C:\root\githubcode\PPT-Addin\obj\Debug\PPT网页插件.csproj.ResolveComReference.cache
+C:\root\githubcode\PPT-Addin\obj\Debug\PowerPointAddIn.ContactForm.resources
+C:\root\githubcode\PPT-Addin\obj\Debug\PowerPointAddIn.WebBrowserForm.resources
+C:\root\githubcode\PPT-Addin\obj\Debug\PowerPointAddIn.Properties.Resources.resources
+C:\root\githubcode\PPT-Addin\obj\Debug\PowerPointAddIn.QRCodePanel.resources
+C:\root\githubcode\PPT-Addin\obj\Debug\PowerPointAddIn.WebViewPanel.resources
+C:\root\githubcode\PPT-Addin\obj\Debug\PPT网页插件.csproj.GenerateResource.cache
+C:\root\githubcode\PPT-Addin\obj\Debug\PPT网页插件.csproj.CoreCompileInputs.cache
+C:\root\githubcode\PPT-Addin\obj\Debug\PPT网页插件.csproj.Up2Date
+C:\root\githubcode\PPT-Addin\obj\Debug\PowerPointAddIn.dll

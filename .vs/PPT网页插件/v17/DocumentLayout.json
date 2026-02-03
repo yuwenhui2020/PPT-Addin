@@ -3,11 +3,12 @@
   "WorkspaceRootPath": "C:\\root\\githubcode\\PPT-Addin\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{8AF8C0C0-2964-46E7-9BC6-670AF7A32580}|PPT\u7F51\u9875\u63D2\u4EF6.csproj|c:\\root\\githubcode\\ppt-addin\\webviewpanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{8AF8C0C0-2964-46E7-9BC6-670AF7A32580}|PPT\u7F51\u9875\u63D2\u4EF6.csproj|solutionrelative:webviewpanel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{8AF8C0C0-2964-46E7-9BC6-670AF7A32580}|PPT\u7F51\u9875\u63D2\u4EF6.csproj|c:\\root\\githubcode\\ppt-addin\\thisaddin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8AF8C0C0-2964-46E7-9BC6-670AF7A32580}|PPT\u7F51\u9875\u63D2\u4EF6.csproj|solutionrelative:thisaddin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|PPT\u7F51\u9875\u63D2\u4EF6||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+      "AbsoluteMoniker": "D:0:0:{8AF8C0C0-2964-46E7-9BC6-670AF7A32580}|PPT\u7F51\u9875\u63D2\u4EF6.csproj|C:\\root\\githubcode\\PPT-Addin\\webbrowserform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8AF8C0C0-2964-46E7-9BC6-670AF7A32580}|PPT\u7F51\u9875\u63D2\u4EF6.csproj|solutionrelative:webbrowserform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -17,31 +18,32 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "WebViewPanel.cs",
-              "DocumentMoniker": "C:\\root\\githubcode\\PPT-Addin\\WebViewPanel.cs",
-              "RelativeDocumentMoniker": "WebViewPanel.cs",
-              "ToolTip": "C:\\root\\githubcode\\PPT-Addin\\WebViewPanel.cs",
-              "RelativeToolTip": "WebViewPanel.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAuAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "WebBrowserForm.cs",
+              "DocumentMoniker": "C:\\root\\githubcode\\PPT-Addin\\WebBrowserForm.cs",
+              "RelativeDocumentMoniker": "WebBrowserForm.cs",
+              "ToolTip": "C:\\root\\githubcode\\PPT-Addin\\WebBrowserForm.cs",
+              "RelativeToolTip": "WebBrowserForm.cs",
+              "ViewState": "AgIAALUAAAAAAAAAAAAswHsAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-02T08:54:14.907Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-03T07:49:58.254Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "PPT\u7F51\u9875\u63D2\u4EF6",
-              "DocumentMoniker": "C:\\root\\githubcode\\PPT-Addin\\PPT\u7F51\u9875\u63D2\u4EF6.csproj",
-              "RelativeDocumentMoniker": "PPT\u7F51\u9875\u63D2\u4EF6.csproj",
-              "ToolTip": "C:\\root\\githubcode\\PPT-Addin\\PPT\u7F51\u9875\u63D2\u4EF6.csproj",
-              "RelativeToolTip": "PPT\u7F51\u9875\u63D2\u4EF6.csproj",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2025-11-02T08:51:28.314Z"
+              "DocumentIndex": 0,
+              "Title": "ThisAddIn.cs",
+              "DocumentMoniker": "C:\\root\\githubcode\\PPT-Addin\\ThisAddIn.cs",
+              "RelativeDocumentMoniker": "ThisAddIn.cs",
+              "ToolTip": "C:\\root\\githubcode\\PPT-Addin\\ThisAddIn.cs",
+              "RelativeToolTip": "ThisAddIn.cs",
+              "ViewState": "AgIAAEYBAAAAAAAAAAAQwFwBAABXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-03T07:47:56.629Z",
+              "EditorCaption": ""
             }
           ]
         }

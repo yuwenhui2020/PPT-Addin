@@ -142,6 +142,9 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="QRCoder, Version=1.6.0.0, Culture=neutral, PublicKeyToken=c4ed5b9ae8358a28, processorArchitecture=MSIL">
+      <HintPath>packages\QRCoder.1.6.0\lib\net40\QRCoder.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -225,6 +228,19 @@
     can be found.
   -->
   <ItemGroup>
+    <Compile Include="ContactForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ContactForm.Designer.cs">
+      <DependentUpon>ContactForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FirewallHelper.cs" />
+    <Compile Include="SymbolPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SymbolPanel.Designer.cs">
+      <DependentUpon>SymbolPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="WebBrowserForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -234,13 +250,23 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="QRCodePanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="QRCodePanel.Designer.cs">
+      <DependentUpon>QRCodePanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Ribbon1.cs" />
+    <Compile Include="WebControl.cs" />
     <Compile Include="WebViewPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="WebViewPanel.Designer.cs">
       <DependentUpon>WebViewPanel.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ContactForm.resx">
+      <DependentUpon>ContactForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="WebBrowserForm.resx">
       <DependentUpon>WebBrowserForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -254,11 +280,15 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="QRCodePanel.resx">
+      <DependentUpon>QRCodePanel.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="WebViewPanel.resx">
       <DependentUpon>WebViewPanel.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
-    <None Include="PowerPointAddIn_TemporaryPublicKey.pfx" />
+    <None Include="PowerPointAddIn_TemporaryKey.pfx" />
+    <None Include="PPT网页插件_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -310,6 +340,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Ribbon1.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="WebConsole\index.html" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -318,10 +351,10 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>PowerPointAddIn_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>PPT网页插件_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>E3037B47283F9C2ADF882904CC485C97CC74B8BB</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>09025B52E4B253A887CEF6435604CA0B16A95823</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -330,7 +363,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>PowerPointAddIn_TemporaryPublicKey.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>PPT网页插件_TemporaryKey.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <!-- Include the build rules for a C# project. -->
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

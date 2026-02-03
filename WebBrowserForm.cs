@@ -3,7 +3,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Windows.Forms;
-//这是实时网页窗口
+
 namespace PowerPointAddIn
 {
     public partial class WebBrowserForm : Form
@@ -11,11 +11,20 @@ namespace PowerPointAddIn
         public WebBrowserForm()
         {
             this.AutoScaleMode = AutoScaleMode.Dpi;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             InitializeComponent();
             this.FormBorderStyle = FormBorderStyle.None;
             this.ShowInTaskbar = false;
+            this.FormClosing += WebBrowserForm_FormClosing;
+            // 设置DPI感知
+            if (Environment.OSVersion.Version.Major >= 6)
+            {
+                SetProcessDPIAware();
+            }
             InitializeAsync();
         }
+        [DllImport("user32.dll")]
+        private static extern bool SetProcessDPIAware();
         // 导入Windows API函数
         [DllImport("user32.dll")]
         private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
@@ -30,7 +39,109 @@ namespace PowerPointAddIn
         private const int WS_EX_TOPMOST = 0x00000008;
         private const int GWL_STYLE = -16;
         private const int WS_CHILD = 0x40000000;
+        private void WebBrowserForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // 清理WebView2资源
+            try
+            {
+                if (webView21 != null && webView21.CoreWebView2 != null)
+                {
+                    webView21.CoreWebView2.Stop();
+                }
+                webView21.Dispose();
+            }
+            catch
+            {
+                // 忽略清理错误
+            }
+        }
+        public string CurrentUrl { get; private set; }
 
+        public void NavigateToUrl(string url)
+        {
+            try
+            {
+                if (webView21.CoreWebView2 != null)
+                {
+                    webView21.Source = new Uri(url);
+                    CurrentUrl = url;
+                }
+                else
+                {
+                    webView21.CoreWebView2InitializationCompleted += (s, e) =>
+                    {
+                        if (e.IsSuccess)
+                        {
+                            webView21.Source = new Uri(url);
+                            CurrentUrl = url;
+                        }
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"导航失败: {ex.Message}");
+            }
+        }
+
+        public void AddWebView(string url, int width, int height)
+        {
+            try
+            {
+                CurrentUrl = url;
+
+                if (webView21.CoreWebView2 != null)
+                {
+                    webView21.Source = new Uri(url);
+                }
+                else
+                {
+                    webView21.CoreWebView2InitializationCompleted += (s, e) =>
+                    {
+                        if (e.IsSuccess)
+                        {
+                            webView21.Source = new Uri(url);
+                        }
+                    };
+                }
+
+                webView21.Width = width;
+                webView21.Height = height;
+                this.ClientSize = new System.Drawing.Size(width, height);
+                webView21.Dock = DockStyle.Fill;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"加载网页失败: {ex.Message}");
+            }
+        }
+
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            base.OnVisibleChanged(e);
+
+            if (this.Visible && webView21 != null && webView21.CoreWebView2 != null)
+            {
+            }
+        }
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                try
+                {
+                    if (webView21 != null)
+                    {
+                        webView21.Dispose();
+                    }
+                }
+                catch
+                {
+                    // 忽略清理错误
+                }
+            }
+            base.Dispose(disposing);
+        }
         public void SetAsChildWindow(IntPtr parentHandle)
         {
             // 设置父窗口
@@ -85,11 +196,11 @@ namespace PowerPointAddIn
                 //MessageBox.Show($"WebView2初始化失败: {ex.Message}\nStackTrace: {ex.StackTrace}");
                 if (ex.InnerException != null)
                 {
-                    //    MessageBox.Show($"Inner Exception: {ex.InnerException.Message}");
+                //    MessageBox.Show($"Inner Exception: {ex.InnerException.Message}");
                 }
             }
         }
-        private void CoreWebView2_NewWindowRequested(object sender, Microsoft.Web.WebView2.Core.CoreWebView2NewWindowRequestedEventArgs e)
+        private void CoreWebView2_NewWindowRequested(object sender,Microsoft.Web.WebView2.Core.CoreWebView2NewWindowRequestedEventArgs e)
         {
             e.Handled = true;
             webView21.CoreWebView2.Navigate(e.Uri);
@@ -98,34 +209,6 @@ namespace PowerPointAddIn
         {
             // 导航完成后的处理
         }
-        public void AddWebView(string url, int width, int height)
-        {
-            try
-            {
-                if (webView21.CoreWebView2 != null)
-                {
-                    webView21.Source = new Uri(url);
-                }
-                else
-                {
-                    webView21.CoreWebView2InitializationCompleted += (s, e) =>
-                    {
-                        if (e.IsSuccess)
-                        {
-                            webView21.Source = new Uri(url);
-                        }
-                    };
-                }
-
-                webView21.Width = width;
-                webView21.Height = height;
-                this.ClientSize = new System.Drawing.Size(width, height);
-                webView21.Dock = DockStyle.Fill;
-            }
-            catch (Exception ex)
-            {
-                //MessageBox.Show($"加载网页失败: {ex.Message}");
-            }
-        }
+        
     }
 }
