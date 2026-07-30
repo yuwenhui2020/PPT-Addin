@@ -10,27 +10,31 @@ namespace PowerPointAddIn
     {
         public WebBrowserForm()
         {
-            this.AutoScaleMode = AutoScaleMode.Dpi;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             InitializeComponent();
+            // 关闭自动缩放与自动尺寸：
+            // 我们会用 SetWindowPos 以像素精确设置窗口位置和大小，
+            // AutoScaleMode/AutoSize 会在不同 DPI 下二次改变尺寸，导致无法精确覆盖占位符。
+            this.AutoScaleMode = AutoScaleMode.None;
+            this.AutoSize = false;
             this.FormBorderStyle = FormBorderStyle.None;
             this.ShowInTaskbar = false;
             this.FormClosing += WebBrowserForm_FormClosing;
-            // 设置DPI感知
-            if (Environment.OSVersion.Version.Major >= 6)
-            {
-                SetProcessDPIAware();
-            }
+            // 注意：不要在这里调用 SetProcessDPIAware()。
+            // 插件是 in-process 加载到 PowerPoint 的，强制设置“系统级 DPI 感知”
+            // 会覆盖 PowerPoint 自身的“每监视器 DPI 感知 v2(PMv2)”，导致在 DPI
+            // 与主屏不同的副屏上，子窗口与 WebView2 内容尺寸/清晰度异常。
+            // 让 PowerPoint 的 PMv2 保持生效，子窗口会继承放映窗口所在屏幕的 DPI。
             InitializeAsync();
         }
-        [DllImport("user32.dll")]
-        private static extern bool SetProcessDPIAware();
         // 导入Windows API函数
         [DllImport("user32.dll")]
         private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
 
         [DllImport("user32.dll")]
         private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
         [DllImport("user32.dll", SetLastError = true)]
         private static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
 
@@ -38,6 +42,7 @@ namespace PowerPointAddIn
         private const int WS_EX_NOACTIVATE = 0x08000000;
         private const int WS_EX_TOPMOST = 0x00000008;
         private const int GWL_STYLE = -16;
+        private const int GWL_HWNDPARENT = -8;
         private const int WS_CHILD = 0x40000000;
         private void WebBrowserForm_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -56,6 +61,15 @@ namespace PowerPointAddIn
             }
         }
         public string CurrentUrl { get; private set; }
+
+        // 记录当前覆盖层所依附的放映窗口句柄，便于翻页/定时刷新时重新定位，
+        // 以及检测该窗口是否仍存在（演讲者视图关闭或窗口重建时句柄会失效）。
+        public IntPtr OwnerHwnd { get; set; }
+
+        // 上一次“有效定位”的结果，用于在换页过渡、窗口几何暂不可得时，
+        // 仍能停留在正确位置并可见（避免退回屏幕尺寸/1px 而闪退到屏幕外导致“看不见”）。
+        public int LastGoodLeft, LastGoodTop, LastGoodWidth, LastGoodHeight;
+        public bool HasLastGood = false;
 
         public void NavigateToUrl(string url)
         {
@@ -142,20 +156,23 @@ namespace PowerPointAddIn
             }
             base.Dispose(disposing);
         }
-        public void SetAsChildWindow(IntPtr parentHandle)
+        public void SetAsOverlayWindow(IntPtr parentHandle)
         {
-            // 设置父窗口
-            SetParent(this.Handle, parentHandle);
-
-            // 设置窗口样式为子窗口
+            // 作为“拥有者窗口(owner)”附加到放映窗口，而不是 WS_CHILD 子窗口：
+            // 拥有者窗口始终位于放映窗口之上、并随其移动/关闭；
+            // 而 WS_CHILD 子窗口在跨“不同 DPI 的屏幕”时，其坐标会被父窗口的
+            // DPI 上下文二次缩放，正是多显示器下网页“水平偏左”的根因。
             int style = GetWindowLong(this.Handle, GWL_STYLE);
-            SetWindowLong(this.Handle, GWL_STYLE, style | WS_CHILD);
+            SetWindowLong(this.Handle, GWL_STYLE, style & ~WS_CHILD);
 
-            // 确保窗口不激活
-            style = GetWindowLong(this.Handle, GWL_EXSTYLE);
-            SetWindowLong(this.Handle, GWL_EXSTYLE, (style | WS_EX_TOPMOST) & ~WS_EX_NOACTIVATE);
+            // 设为放映窗口的拥有者（owner），保持置顶跟随
+            SetWindowLongPtr(this.Handle, GWL_HWNDPARENT, parentHandle);
+            OwnerHwnd = parentHandle;
 
-            // 确保窗体出现在正确的显示器上
+            // 置顶 + 不激活
+            int exStyle = GetWindowLong(this.Handle, GWL_EXSTYLE);
+            SetWindowLong(this.Handle, GWL_EXSTYLE, exStyle | WS_EX_TOPMOST | WS_EX_NOACTIVATE);
+
             this.StartPosition = FormStartPosition.Manual;
         }
         private async void InitializeAsync()

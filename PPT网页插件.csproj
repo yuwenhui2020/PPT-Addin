@@ -287,7 +287,6 @@
       <DependentUpon>WebViewPanel.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
-    <None Include="PowerPointAddIn_TemporaryKey.pfx" />
     <None Include="PPT网页插件_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
