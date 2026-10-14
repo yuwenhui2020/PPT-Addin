@@ -1,183 +1,346 @@
-
 @echo off
-chcp 65001 >nul
-title PowerPointæ’ä»¶ç®¡ç†å·¥å…·
+chcp 936 >nul
+title PowerPoint ÍøÒ³²å¼þ °²×°³ÌÐò
 color 0A
-:: æ£€æŸ¥å¹¶èŽ·å–ç®¡ç†å‘˜æƒé™
->nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
-if '%errorlevel%' neq '0' (
-    echo æ­£åœ¨è¯·æ±‚ç®¡ç†å‘˜æƒé™...
-    powershell -Command "Start-Process '%~f0' -Verb RunAs -ArgumentList 'install'"
-    exit /b
-)
+
+:: =========================================================================
+::  ÌáÈ¨ºóÍ¨¹ý²ÎÊýÖ±½Ó½øÈë¶ÔÓ¦Á÷³Ì£¨±ÜÃâÔÙ´ÎÏÔÊ¾²Ëµ¥¶ªÊ§Ñ¡Ôñ£©
+:: =========================================================================
+if '%1'=='install' goto install
+if '%1'=='uninstall' goto uninstall
+if '%1'=='repair' goto repair
+
 :menu
 cls
 echo ========================================
-echo    PowerPointæ’ä»¶ç®¡ç†å·¥å…·
+echo    PowerPoint ÍøÒ³²å¼þ °²×°³ÌÐò
 echo ========================================
 echo.
-echo   [1]å®‰è£…æ’ä»¶ 
-echo   [2]å¸è½½æ’ä»¶ 
-echo   [3]æŸ¥çœ‹çŠ¶æ€ 
-echo   [4]é€€å‡º 
+echo   [1] °²×°²å¼þ£¨º¬ÔËÐÐ¿â×Ô¼ìÓë¾²Ä¬°²×°£©
+echo   [2] Ð¶ÔØ²å¼þ£¨±£ÁôÏµÍ³ÔËÐÐ¿â£¬²»Ð¶ÔØ£©
+echo   [3] ÐÞ¸´²å¼þ£¨ÏÈÐ¶ÔØÔÙÖØ×° + ÔËÐÐ¿â¼ì²â£©
+echo   [4] ÍË³ö
 echo.
 echo ========================================
 
-set /p choice=è¯·é€‰æ‹©æ“ä½œ (1-4): 
+set /p choice=ÇëÑ¡Ôñ²Ù×÷ (1-4): 
 
-if "%choice%"=="1" goto install
-if "%choice%"=="2" goto uninstall
-if "%choice%"=="3" goto status
+if "%choice%"=="1" call :NeedAdmin install
+if "%choice%"=="2" call :NeedAdmin uninstall
+if "%choice%"=="3" call :NeedAdmin repair
 if "%choice%"=="4" exit /b
 goto menu
 
+
+:: =========================================================================
+::  ¹ÜÀíÔ±È¨ÏÞ×Ô¼ì£ºÎÞÈ¨ÏÞÔòÌáÈ¨ºóÐ¯´ø²Ù×÷²ÎÊýÖØÆô×ÔÉí
+:: =========================================================================
+:NeedAdmin
+>nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
+if '%errorlevel%' neq '0' (
+    echo ÕýÔÚÇëÇó¹ÜÀíÔ±È¨ÏÞ...
+    powershell -Command "Start-Process '%~f0' -Verb RunAs -ArgumentList '%1'"
+    exit /b
+)
+if '%1'=='install' goto install
+if '%1'=='uninstall' goto uninstall
+if '%1'=='repair' goto repair
+goto menu
+
+
+:: =========================================================================
+::  °²×°£¨½ö°²×°ÐèÒª½øÐÐÔËÐÐ¿â¼ì²â£©
+:: =========================================================================
 :install
 cls
 echo ========================================
-echo        å®‰è£… PowerPoint æ’ä»¶ 
+echo        °²×° PowerPoint ÍøÒ³²å¼þ
 echo ========================================
-setlocal enabledelayedexpansion
-set existnet=false 
-for /f "tokens=7 delims=\" %%a in ('REG QUERY HKLM\SOFTWARE\Microsoft\.NETFramework\v4.0.30319\SKUs') do (
-	if not "%%a" == "Client" if not "%%a" == "Default" (
-		if "%1" == "" (
-			SET gg=%%a			
-			SET ss=!gg:~22,6!
-			SET ss=!ss:,=!
-			SET ss=!ss:P=!
-			rem æ‰“å°.net frameworkç‰ˆæœ¬å·
-			rem echo !ss!
-			if "!ss:v4.8=!" NEQ "!ss!" (
-				set existnet=true
-			)
-		) else (			
-			if "!%%a:v4.8=!" NEQ "!%%a!" (
-			 	set existnet=true
-			)	
-			goto exit			
-		)
-	)
+echo.
+echo [µÚÒ»²½] ÔËÐÐ¿â×Ô¼ìÓë¾²Ä¬°²×°£¨½ö°²×°/ÐÞ¸´ÐèÒª£©
+echo.
+call :RuntimeEnsure
+echo.
+echo [µÚ¶þ²½] ×¢²á²¢°²×°²å¼þ...
+echo.
+call :PluginRegister
+echo.
+echo ========================================
+echo  °²×°Íê³É£¡
+echo ========================================
+echo  ÇëÖØÆô PowerPoint£¨»ò WPS£©ÒÔÊ¹²å¼þÉúÐ§¡£
+echo  ÈôÔËÐÐ¿â°²×°ÌáÊ¾ÐèÒªÖØÆô£¬ÇëÖØÆôµçÄÔºóÔÙÊ¹ÓÃ¡£
+echo.
+echo °´ÏÂÈÎÒâ¼ü·µ»Ø²Ëµ¥... &pause>nul
+goto menu
+
+
+:: =========================================================================
+::  Ð¶ÔØ£¨²»Ð¶ÔØÏµÍ³ÔËÐÐ¿â£©
+:: =========================================================================
+:uninstall
+cls
+echo ========================================
+echo        Ð¶ÔØ PowerPoint ÍøÒ³²å¼þ
+echo ========================================
+echo.
+echo ¾¯¸æ£º´Ë²Ù×÷½«É¾³ý²å¼þ×¢²áÐÅÏ¢£¨²»»áÐ¶ÔØÏµÍ³ÔËÐÐ¿â£©¡£
+echo.
+set /p confirm=È·ÈÏÐ¶ÔØ£¿(Y/N): 
+if /i "%confirm%" neq "Y" goto menu
+echo.
+call :PluginRemove
+echo.
+echo ========================================
+echo  Ð¶ÔØÍê³É£¡ÏµÍ³ÔËÐÐ¿â±£³Ö²»±ä¡£
+echo ========================================
+echo °´ÏÂÈÎÒâ¼ü·µ»Ø²Ëµ¥... &pause>nul
+goto menu
+
+
+:: =========================================================================
+::  ÐÞ¸´ = Ð¶ÔØºóÖØÐÂ°²×°£¨ÈÔÐè¼ì²âÔËÐÐ¿âÊÇ·ñ°²×°³É¹¦£©
+:: =========================================================================
+:repair
+cls
+echo ========================================
+echo        ÐÞ¸´ PowerPoint ÍøÒ³²å¼þ
+echo ========================================
+echo.
+echo ÐÞ¸´Á÷³Ì£ºÏÈÐ¶ÔØÏÖÓÐ²å¼þ£¬ÔÙÖØÐÂ°²×°²¢¼ì²âÔËÐÐ¿â¡£
+echo.
+echo [µÚÒ»²½] Ð¶ÔØÏÖÓÐ²å¼þ£¨±£ÁôÔËÐÐ¿â£©...
+echo.
+call :PluginRemove
+echo.
+echo [µÚ¶þ²½] ¼ì²â²¢°²×°ÔËÐÐ¿â£¨È·ÈÏ°²×°³É¹¦£©...
+echo.
+call :RuntimeEnsure
+echo.
+echo [µÚÈý²½] ÖØÐÂ×¢²á²¢°²×°²å¼þ...
+echo.
+call :PluginRegister
+echo.
+echo ========================================
+echo  ÐÞ¸´Íê³É£¡
+echo ========================================
+echo  ÇëÖØÆô PowerPoint£¨»ò WPS£©ÒÔÊ¹²å¼þÉúÐ§¡£
+echo.
+echo °´ÏÂÈÎÒâ¼ü·µ»Ø²Ëµ¥... &pause>nul
+goto menu
+
+
+:: =========================================================================
+::  ÔËÐÐ¿â×Ô¼ì + ¾²Ä¬°²×° + °²×°ºóÑéÖ¤
+::   errorlevel 0=È«²¿¾ÍÐ÷ 1=´æÔÚÎ´³É¹¦°²×°Ïî
+::   ½ö°²×°ÓëÐÞ¸´µ÷ÓÃ±¾Àý³Ì£»Ð¶ÔØ²»µ÷ÓÃ¡£
+:: =========================================================================
+:RuntimeEnsure
+set "RUNTIME_FAIL=0"
+
+:: ---------- ¶¨Î»ÔËÐÐ¿âÄ¿Â¼ ----------
+set "RUNTIMEDIR="
+if exist "%~dp0runtime\" set "RUNTIMEDIR=%~dp0runtime\"
+if not defined RUNTIMEDIR if exist "%~dp0..\bin\runtime\" set "RUNTIMEDIR=%~dp0..\bin\runtime\"
+if not defined RUNTIMEDIR if exist "%~dp0..\..\bin\runtime\" set "RUNTIMEDIR=%~dp0..\..\bin\runtime\"
+if not defined RUNTIMEDIR (
+    echo [!] Î´ÕÒµ½ÔËÐÐ¿âÄ¿Â¼ runtime\¡£
+    echo     Çë½«±¾°²×°³ÌÐòÓë runtime\ ÎÄ¼þ¼Ð·ÅÔÚÒ»Æð£¨runtime ÄÚº¬Èý¸öÔËÐÐ¿â°²×°³ÌÐò£©£¬
+    echo     »ò°Ñ bin\runtime ¸´ÖÆµ½±¾°²×°³ÌÐòÍ¬Ä¿Â¼ÏÂ¡£
+    echo     ÒÑÌø¹ýÔËÐÐ¿â°²×°£¬½ö°²×°²å¼þ±¾Ìå¡£
+    echo.
+    pause
+    exit /b 1
 )
-:exit
-if %existnet% == true (
-	echo   âˆš è¿è¡ŒçŽ¯å¢ƒæ£€æµ‹å®Œæ¯•,å·²å®‰è£… .net framework v4.8è¿è¡ŒçŽ¯å¢ƒ
+
+echo ¼ì²â±Ø±¸ÔËÐÐ¿â£¬È±Ê§½«×Ô¶¯¾²Ä¬°²×°£¨ÏÔÊ¾½ø¶È£©...
+echo.
+
+echo [1/3] .NET Framework 4.8 ÔËÐÐ¿â
+call :CheckNetFx48
+if errorlevel 1 (
+    echo     Î´°²×°£¬¿ªÊ¼¾²Ä¬°²×°...
+    call :InstallRuntime "%RUNTIMEDIR%NDP48-x86-x64-AllOS-ENU.exe" ".NET Framework 4.8" "/q /norestart"
+    call :CheckNetFx48
+    if errorlevel 1 ( echo     [!] °²×°ºóÈÔÎ´¼ì²âµ½£¬ÇëÊÖ¶¯ÔËÐÐ runtime\ ÖÐµÄ°²×°³ÌÐò & set "RUNTIME_FAIL=1" ) else ( echo     [OK] ÒÑ³É¹¦°²×°²¢ÑéÖ¤ )
 ) else (
-	echo ç¼ºå°‘è¿è¡ŒçŽ¯å¢ƒæŒ‰ä»»æ„é”®é€€å‡º,å®‰è£…çŽ¯å¢ƒåŽç»§ç»­æ‰§è¡Œå®‰è£…...
-	start NDP48.exe
-	pause>nul
-exit
- )
-:: [1/6] æ£€æŸ¥VSTOæ–‡ä»¶...
+    echo     [OK] ÒÑ°²×°£¬Ìø¹ý
+)
+
+echo [2/3] WebView2 ÔËÐÐÊ±£¨ÍøÒ³ÏÔÊ¾×é¼þ£©
+call :CheckWebView2
+if errorlevel 1 (
+    echo     Î´°²×°£¬¿ªÊ¼¾²Ä¬°²×°...
+    call :InstallRuntime "%RUNTIMEDIR%MicrosoftEdgeWebView2RuntimeInstallerX64.exe" "WebView2 ÔËÐÐÊ±" "/silent /install"
+    call :CheckWebView2
+    if errorlevel 1 ( echo     [!] °²×°ºóÈÔÎ´¼ì²âµ½£¬ÇëÊÖ¶¯ÔËÐÐ runtime\ ÖÐµÄ°²×°³ÌÐò & set "RUNTIME_FAIL=1" ) else ( echo     [OK] ÒÑ³É¹¦°²×°²¢ÑéÖ¤ )
+) else (
+    echo     [OK] ÒÑ°²×°£¬Ìø¹ý
+)
+
+echo [3/3] .NET 8 ×ÀÃæÔËÐÐ¿â
+call :CheckDotNet8Desktop
+if errorlevel 1 (
+    echo     Î´°²×°£¬¿ªÊ¼¾²Ä¬°²×°...
+    call :InstallRuntime "%RUNTIMEDIR%windowsdesktop-runtime-8.0.16-win-x64.exe" ".NET 8 ×ÀÃæÔËÐÐ¿â" "/install /quiet /norestart"
+    call :CheckDotNet8Desktop
+    if errorlevel 1 ( echo     [!] °²×°ºóÈÔÎ´¼ì²âµ½£¬ÇëÊÖ¶¯ÔËÐÐ runtime\ ÖÐµÄ°²×°³ÌÐò & set "RUNTIME_FAIL=1" ) else ( echo     [OK] ÒÑ³É¹¦°²×°²¢ÑéÖ¤ )
+) else (
+    echo     [OK] ÒÑ°²×°£¬Ìø¹ý
+)
+
+echo.
+if "%RUNTIME_FAIL%"=="1" ( echo [ÔËÐÐ¿â×Ô¼ì] Íê³É£¬µ«´æÔÚÎ´³É¹¦°²×°µÄÔËÐÐ¿â£¬Çë¼ì²éÉÏ·½ÌáÊ¾¡£ ) else ( echo [ÔËÐÐ¿â×Ô¼ì] Íê³É£¬È«²¿ÔËÐÐ¿â¾ÍÐ÷¡£ )
+echo.
+exit /b %RUNTIME_FAIL%
+
+
+:: =========================================================================
+::  ²å¼þ×¢²á£¨HKCU / HKLM / WPS£©+ ¶Ë¿ÚÔ¤³õÊ¼»¯
+:: =========================================================================
+:PluginRegister
+:: ---------- ¼ì²é VSTO ÎÄ¼þ ----------
 if exist "%~dp0PowerPointAddIn.vsto" (
-    echo   âˆš æ‰¾åˆ° PowerPointAddIn.vsto 
+    echo [OK] ÕÒµ½ PowerPointAddIn.vsto
 ) else (
-    echo   âŒ é”™è¯¯: æœªæ‰¾åˆ° PowerPointAddIn.vsto
-    echo   è¯·ç¡®ä¿è¯¥æ–‡ä»¶ä¸Žè„šæœ¬åœ¨åŒä¸€ç›®å½•ä¸‹ã€‚ 
-    echo æŒ‰ä¸‹ä»»æ„é”®è¿”å›žèœå•... &pause>nul
+    echo [X] ´íÎó: Î´ÕÒµ½ PowerPointAddIn.vsto£¬ÇëÈ·±£ËüÓë±¾°²×°³ÌÐòÔÚÍ¬Ò»Ä¿Â¼¡£
+    echo °´ÏÂÈÎÒâ¼ü·µ»Ø²Ëµ¥... &pause>nul
     goto menu
 )
 
-:: [2/6] æ³¨å†Œåˆ°HKCU...
 set "REG_PATH=HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office\PowerPoint\Addins\PowerPointAddIn"
 set "MANIFEST=file:///%~dp0PowerPointAddIn.vsto|vstolocal"
 
-reg add "%REG_PATH%" /f >nul 2>&1 && echo   âˆš HKCU-PPT  || echo   Î§ HKCU-PPTåˆ›å»ºå¤±è´¥ 
+echo.
+echo [²å¼þ×¢²á] Ð´Èë×¢²á±í...
+reg add "%REG_PATH%" /f >nul 2>&1 && echo   [OK] HKCU-PPT  || echo   [X] HKCU-PPT ´´½¨Ê§°Ü
+reg add "%REG_PATH%" /v "FriendlyName" /t REG_SZ /d "ÍøÒ³²å¼þ" /f >nul 2>&1 && echo   [OK] HKCU-FriendlyName  || echo   [X] Ê§°Ü
+reg add "%REG_PATH%" /v "Description" /t REG_SZ /d "Ò»¿îÈ«ÄÜµÄOfficeÍøÒ³²å¼þ" /f >nul 2>&1 && echo   [OK] HKCU-Description || echo   [X] Ê§°Ü
+reg add "%REG_PATH%" /v "LoadBehavior" /t REG_DWORD /d "3" /f >nul 2>&1 && echo   [OK] HKCU-LoadBehavior || echo   [X] Ê§°Ü
+reg add "%REG_PATH%" /v "CommandLineSafe" /t REG_DWORD /d "1" /f >nul 2>&1 && echo   [OK] HKCU-CommandLineSafe || echo   [X] Ê§°Ü
+reg add "%REG_PATH%" /v "Manifest" /t REG_SZ /d "%MANIFEST:\=\\%" /f >nul 2>&1 && echo   [OK] HKCU-Manifest || echo   [X] Ê§°Ü
 
-:: [3/6] è®¾ç½®æ’ä»¶å‚æ•°...
-reg add "%REG_PATH%" /v "FriendlyName" /t REG_SZ /d "ç½‘é¡µæ’ä»¶" /f >nul 2>&1 && echo   âˆš  -æˆåŠŸæ·»åŠ HKCU-FriendlyName  || echo   Î§ HKCU-FriendlyNameåˆ›å»ºå¤±è´¥ 
-reg add "%REG_PATH%" /v "Description" /t REG_SZ /d "ä¸€æ¬¾å…¨èƒ½çš„Officeç½‘é¡µæ’ä»¶" /f >nul 2>&1 && echo   âˆš  -æˆåŠŸæ·»åŠ HKCU-Description  || echo   Î§ HKCU-Descriptionåˆ›å»ºå¤±è´¥
-reg add "%REG_PATH%" /v "LoadBehavior" /t REG_DWORD /d "3" /f >nul 2>&1 && echo   âˆš  -æˆåŠŸæ·»åŠ HKCU-LoadBehavior  || echo   Î§ HKCU-LoadBehavioråˆ›å»ºå¤±è´¥
-reg add "%REG_PATH%" /v "CommandLineSafe" /t REG_DWORD /d "1" /f >nul 2>&1 && echo   âˆš  -æˆåŠŸæ·»åŠ HKCU-CommandLineSafe  || echo   Î§ HKCU-CommandLineSafeåˆ›å»ºå¤±è´¥
-reg add "%REG_PATH%" /v "Manifest" /t REG_SZ /d "%MANIFEST:\=\\%" /f >nul 2>&1 && echo   âˆš  -æˆåŠŸæ·»åŠ HKCU-Manifest  || echo   Î§ HKCU-Manifeståˆ›å»ºå¤±è´¥
-
-:: [4/6] æ³¨å†Œåˆ°HKLM...
 (
     echo Windows Registry Editor Version 5.00
     echo.
     echo [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Office\PowerPoint\Addins\PowerPointAddIn]
-    echo "FriendlyName"="ç½‘é¡µæ’ä»¶"
-    echo "Description"="ä¸€æ¬¾å…¨èƒ½çš„Officeç½‘é¡µæ’ä»¶"
+    echo "FriendlyName"="ÍøÒ³²å¼þ"
+    echo "Description"="Ò»¿îÈ«ÄÜµÄOfficeÍøÒ³²å¼þ"
     echo "LoadBehavior"=dword:00000003
     echo "CommandLineSafe"=dword:00000001
     echo "Manifest"="%MANIFEST:\=\\%"
 ) > "%TEMP%\ppt_system.reg"
-
-reg import "%TEMP%\ppt_system.reg" >nul 2>&1 && echo   âˆš HKLM-PPT-64ä½å…¼å®¹  || echo   âš  HKLM-PPT-32ä½å…¼å®¹å®‰è£…å¤±è´¥
+reg import "%TEMP%\ppt_system.reg" >nul 2>&1 && echo   [OK] HKLM-PPT-64Î»¼æÈÝ || echo   [!] HKLM-PPT-64Î»¼æÈÝÊ§°Ü£¨¿ÉÄÜÐè¸ü¸ßÈ¨ÏÞ£©
 
 (
     echo Windows Registry Editor Version 5.00
     echo.
     echo [HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Office\PowerPoint\Addins\PowerPointAddIn]
-    echo "FriendlyName"="ç½‘é¡µæ’ä»¶"
-    echo "Description"="ä¸€æ¬¾å…¨èƒ½çš„Officeç½‘é¡µæ’ä»¶"
+    echo "FriendlyName"="ÍøÒ³²å¼þ"
+    echo "Description"="Ò»¿îÈ«ÄÜµÄOfficeÍøÒ³²å¼þ"
     echo "LoadBehavior"=dword:00000003
     echo "CommandLineSafe"=dword:00000001
     echo "Manifest"="%MANIFEST:\=\\%"
 ) > "%TEMP%\ppt_wow64.reg"
+reg import "%TEMP%\ppt_wow64.reg" >nul 2>&1 && echo   [OK] HKLM-PPT-32Î»¼æÈÝ || echo   [!] HKLM-PPT-32Î»¼æÈÝÊ§°Ü
 
-reg import "%TEMP%\ppt_wow64.reg" >nul 2>&1 && echo   âˆš HKLM-PPT-32ä½å…¼å®¹  || echo   âš  HKLM-PPT-32ä½å…¼å®¹å¤±è´¥ 
-
-:: [5/6] æ³¨å†Œåˆ°WPS Office...
 reg add "HKEY_CURRENT_USER\SOFTWARE\Kingsoft\Office\WPP\AddinsWL" /v "PowerPointAddIn" /t REG_SZ /d "" /f >nul 2>&1
-if errorlevel 1 (
-    echo   âš  WPSæ³¨å†Œå¤±è´¥
-) else (
-    echo   âˆš WPS Officeå…¼å®¹
-)
+if errorlevel 1 ( echo   [!] WPS ×¢²áÊ§°Ü ) else ( echo   [OK] WPS Office ¼æÈÝ )
 
-:: [6/6] æ¸…ç†ä¸´æ—¶æ–‡ä»¶...
+:: ---------- WEB ¿ØÖÆÌ¨¶Ë¿ÚÔ¤³õÊ¼»¯£¨8887-8892£© ----------
+echo.
+echo [¶Ë¿Ú³õÊ¼»¯] Ô¤ÅäÖÃ WEB ¿ØÖÆÌ¨¶Ë¿Ú£¨urlacl + ·À»ðÇ½£©£¬Ö®ºó¿ªÆô¿ØÖÆÌ¨ÎÞÐè UAC...
+for %%P in (8887 8888 8889 8890 8891 8892) do call :PortInit %%P
+echo   [OK] ¶Ë¿Ú³õÊ¼»¯Íê±Ï
+
 del "%TEMP%\ppt_system.reg" >nul 2>&1
 del "%TEMP%\ppt_wow64.reg" >nul 2>&1
+exit /b
 
-echo.
-echo ========================================
-echo âœ… æ’ä»¶å®‰è£…å®Œæˆï¼
-echo ========================================
-echo æŒ‰ä¸‹ä»»æ„é”®è¿”å›žèœå•... &pause>nul
-goto menu
 
-:uninstall
-cls
-echo ========================================
-echo        å¸è½½ PowerPoint æ’ä»¶ 
-echo ========================================
-echo.
-echo è­¦å‘Šï¼šæ­¤æ“ä½œå°†åˆ é™¤æ’ä»¶æ³¨å†Œä¿¡æ¯ã€‚ 
-echo.
-set /p confirm=ç¡®è®¤å¸è½½ï¼Ÿ(Y/N): 
+:: =========================================================================
+::  ²å¼þÐ¶ÔØ£¨½öÉ¾³ý×¢²áÐÅÏ¢£¬²»´¥ÅöÏµÍ³ÔËÐÐ¿â£©
+:: =========================================================================
+:PluginRemove
+echo ÕýÔÚÐ¶ÔØ²å¼þ£¨±£ÁôÏµÍ³ÔËÐÐ¿â£©...
+reg delete "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office\PowerPoint\Addins\PowerPointAddIn" /f>nul 2>&1 && echo   [OK] HKCU-PPT É¾³ý³É¹¦    || echo   [X] HKCU-PPT É¾³ýÊ§°Ü
+reg delete "HKEY_CURRENT_USER\SOFTWARE\Kingsoft\Office\WPP\AddinsWL" /f>nul 2>&1 && echo   [OK] HKCU-WPS ¼æÈÝÉ¾³ý³É¹¦    || echo   [X] HKCU-WPS ¼æÈÝÉ¾³ýÊ§°Ü
+reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Office\PowerPoint\Addins\PowerPointAddIn" /f>nul 2>&1 && echo   [OK] HKLM-PPT-64 É¾³ý³É¹¦    || echo   [X] HKLM-PPT-64 É¾³ýÊ§°Ü
+reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Office\PowerPoint\Addins\PowerPointAddIn" /f>nul 2>&1 && echo   [OK] HKLM-PPT-32 É¾³ý³É¹¦    || echo   [X] HKLM-PPT-32 É¾³ýÊ§°Ü
+"C:\Program Files\Common Files\Microsoft Shared\VSTO\10.0\VSTOInstaller.exe" /Uninstall file:///%~dp0PowerPointAddIn.vsto /s >nul 2>&1 && echo   [OK] APP-PPT É¾³ý³É¹¦    || echo   [X] APP-PPT É¾³ýÊ§°Ü£¨¿ÉÄÜÎ´ÔøÍ¨¹ýË«»÷ vsto °²×°£©
+exit /b
 
-if /i "%confirm%" neq "Y" goto menu
 
-:: æ£€æŸ¥ç®¡ç†å‘˜æƒé™
->nul 2>&1 "%SYSTEMROOT%\system32\cacls.exe" "%SYSTEMROOT%\system32\config\system"
-if '%errorlevel%' neq '0' (
-    echo æ­£åœ¨è¯·æ±‚ç®¡ç†å‘˜æƒé™...
-    powershell -Command "Start-Process '%~f0' -Verb RunAs -ArgumentList 'uninstall'"
-    exit /b
+:: =========================================================================
+::  ÔËÐÐ¿â¼ì²â×Ó³ÌÐò£ºerrorlevel 0=ÒÑ°²×° 1=Î´°²×°
+:: =========================================================================
+:CheckNetFx48
+powershell -NoProfile -Command "$r=Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full' -Name Release -ErrorAction SilentlyContinue; if($r -and $r.Release -ge 528040){exit 0}else{exit 1}"
+exit /b
+
+:CheckWebView2
+reg query "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall" /s 2>nul | findstr /i "Microsoft Edge WebView2 Runtime" >nul
+if not errorlevel 1 exit /b 0
+reg query "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall" /s 2>nul | findstr /i "Microsoft Edge WebView2 Runtime" >nul
+if not errorlevel 1 exit /b 0
+exit /b 1
+
+:CheckDotNet8Desktop
+reg query "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall" /s 2>nul | findstr /i "Microsoft Windows Desktop Runtime" >nul
+if not errorlevel 1 exit /b 0
+reg query "HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall" /s 2>nul | findstr /i "Microsoft Windows Desktop Runtime" >nul
+if not errorlevel 1 exit /b 0
+exit /b 1
+
+
+:: =========================================================================
+::  ÔËÐÐ¿â¾²Ä¬°²×°×Ó³ÌÐò£¨´ø½ø¶ÈÏÔÊ¾£©
+::   %1 = °²×°³ÌÐòÍêÕûÂ·¾¶
+::   %2 = ÏÔÊ¾Ãû³Æ
+::   %3 = ¾²Ä¬°²×°²ÎÊý
+:: =========================================================================
+:InstallRuntime
+set "EXE=%~1"
+set "NAME=%~2"
+set "ARGS=%~3"
+if not exist "%EXE%" (
+    echo     [!] Î´ÕÒµ½°²×°³ÌÐò£º%EXE%
+    echo         ÇëÈ·ÈÏ runtime\ Ä¿Â¼ÍêÕû£¨º¬Èý¸öÔËÐÐ¿â°²×°³ÌÐò£©¡£
+    exit /b 1
 )
-
 echo.
-echo æ­£åœ¨å¸è½½æ’ä»¶...
-reg delete "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office\PowerPoint\Addins\PowerPointAddIn" /f>nul 2>&1 && echo   âˆšHKCU-PPTåˆ é™¤æˆåŠŸ    || echo   Î§ HKCU-PPTåˆ é™¤å¤±è´¥ï¼å¯èƒ½æ˜¯ä¸å­˜åœ¨ï¼Ÿ 
-reg delete "HKEY_CURRENT_USER\SOFTWARE\Kingsoft\Office\WPP\AddinsWL" /f>nul 2>&1 && echo   âˆšHKCU-WPS å…¼å®¹åˆ é™¤æˆåŠŸ    || echo   Î§ HKCU-WPS å…¼å®¹åˆ é™¤å¤±è´¥ï¼å¯èƒ½æ˜¯ä¸å­˜åœ¨ï¼Ÿ 
-reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Office\PowerPoint\Addins\PowerPointAddIn" /f>nul 2>&1 && echo   âˆšHKLM-PPT-64åˆ é™¤æˆåŠŸ    || echo   Î§ HKLM-PPT-64åˆ é™¤å¤±è´¥ï¼å¯èƒ½æ˜¯ä¸å­˜åœ¨ï¼Ÿ 
-reg delete "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Office\PowerPoint\Addins\PowerPointAddIn" /f>nul 2>&1 && echo   âˆšHKLM-PPT-32åˆ é™¤æˆåŠŸ    || echo   Î§ HKLM-PPT-32åˆ é™¤å¤±è´¥ï¼å¯èƒ½æ˜¯ä¸å­˜åœ¨ï¼Ÿ 
-"C:\Program Files\Common Files\Microsoft Shared\VSTO\10.0\VSTOInstaller.exe" /Uninstall file:///%~dp0PowerPointAddIn.vsto /s >nul 2>&1 && echo   âˆšAPP-PPTåˆ é™¤æˆåŠŸ    || echo   Î§ APP-PPTåˆ é™¤å¤±è´¥ï¼å¯èƒ½æ˜¯æ²¡ä½¿ç”¨åŒå‡»vstoæ–‡ä»¶çš„æ–¹æ³•å®‰è£…è¿‡ 
+echo   -- ÕýÔÚ°²×° %NAME% ...
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$p=Start-Process -FilePath '%EXE%' -ArgumentList '%ARGS%' -PassThru; $pct=0; while(-not $p.HasExited){ $pct=[math]::Min(99,$pct+2); Write-Progress -Activity '°²×° %NAME%' -Status 'ÕýÔÚ°²×°£¬ÇëÉÔºò...' -PercentComplete $pct; Start-Sleep -Milliseconds 300 }; Write-Progress -Activity '°²×° %NAME%' -Completed; Write-Host ('    Íê³É£¨ÍË³öÂë '+$p.ExitCode+'£©'); if($p.ExitCode -eq 3010 -or $p.ExitCode -eq 1641){ Write-Host '    [ÌáÊ¾] ¸ÃÔËÐÐ¿âÐèÒªÖØÆôÏµÍ³ºóÉúÐ§' }"
+exit /b 0
 
 
-echo æŒ‰ä¸‹ä»»æ„é”®è¿”å›žèœå•... &pause>nul
-goto menu
+:: =========================================================================
+::  ×Ó³ÌÐò£º³õÊ¼»¯µ¥¸ö WEB ¿ØÖÆÌ¨¶Ë¿Ú
+::   1) urlacl£ºHttpListener °ó¶¨ http://+:¶Ë¿Ú/ ±ØÐëÏÈ±£Áô£¬·ñÔò¾Ü¾ø·ÃÎÊ
+::   2) ·À»ðÇ½£º¹æÔòÃûÐëÓë FirewallHelper/WebControl µÄ RemoteControl_¶Ë¿Ú Ò»ÖÂ
+::  ±¾°²×°³ÌÐòÒÑ¾ß±¸¹ÜÀíÔ±È¨ÏÞ£¬ÎÞÐèÔÙ´ÎÌáÈ¨£»ÇÒ²Ù×÷ÃÝµÈ£¬¿ÉÖØ¸´Ö´ÐÐ¡£
+::  ¶Ë¿Ú·¶Î§ 8887-8892 ¸²¸Ç¡°Ä¬ÈÏÈý¶Î¡±Óë¡°8888 ±»Õ¼ÓÃºóµÄºóÒÆ¶Î¡±£¬Ê¹Ê×´Î¿ªÆô¿ØÖÆÌ¨ 0 ´Î UAC¡£
+:: =========================================================================
+:PortInit
+set PP=%1
 
-:status
-cls
-echo ========================================
-echo        æ’ä»¶çŠ¶æ€æ£€æŸ¥ 
-echo ========================================
-reg query "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Office\PowerPoint\Addins\PowerPointAddIn">nul 2>&1 && echo   âˆšHKCU-PPTå·²å®‰è£…æˆåŠŸ    || echo   Î§ HKCU-PPä¸å­˜åœ¨ 
-reg query "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Office\PowerPoint\Addins\PowerPointAddIn">nul 2>&1 && echo   âˆšHKLM-PPT-64ä½å·²å®‰è£…æˆåŠŸ    || echo   Î§ HKCU-PPT-64ä½ä¸å­˜åœ¨ 
-reg query "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Office\PowerPoint\Addins\PowerPointAddIn">nul 2>&1 && echo   âˆšHKLM-PPT-32ä½å·²å®‰è£…æˆåŠŸ    || echo   Î§ HKCU-PPT-32ä½ä¸å­˜åœ¨ 
-reg query "HKEY_CURRENT_USER\SOFTWARE\Kingsoft\Office\WPP\AddinsWL">nul 2>&1 && echo   âˆšHKCU-WPSå·²å®‰è£…æˆåŠŸ    || echo   Î§ HKCU-WPSä¸å­˜åœ¨ 
-echo ========================================
-echo æŒ‰ä¸‹ä»»æ„é”®è¿”å›žèœå•... &pause>nul
-goto menu
-pause
+netsh http delete urlacl url=http://+:%PP%/ >nul 2>&1
+netsh http add urlacl url=http://+:%PP%/ user="%USERNAME%" >nul 2>&1
+if %errorlevel% equ 0 goto :PortFw
+netsh http add urlacl url=http://+:%PP%/ user="%USERDOMAIN%\%USERNAME%" >nul 2>&1
+if %errorlevel% equ 0 goto :PortFw
+netsh http add urlacl url=http://+:%PP%/ user="Everyone" >nul 2>&1
+
+:PortFw
+netsh advfirewall firewall show rule name="RemoteControl_%PP%" >nul 2>&1
+if %errorlevel% equ 0 (
+    echo     [OK] ¶Ë¿Ú %PP% ÒÑ·ÅÐÐ
+    goto :eof
+)
+netsh advfirewall firewall add rule name="RemoteControl_%PP%" dir=in action=allow protocol=TCP localport=%PP% >nul 2>&1
+if %errorlevel% equ 0 (
+    echo     [OK] ¶Ë¿Ú %PP% ÒÑ·ÅÐÐ
+) else (
+    echo     [!] ¶Ë¿Ú %PP% ·À»ðÇ½·ÅÐÐÊ§°Ü£¨²»Ó°Ïì±¾»úä¯ÀÀÆ÷·ÃÎÊ£©
+)
+goto :eof

@@ -4,6 +4,34 @@
     <title>PPT Web控制台</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta charset="utf-8" />
+    <script>
+        // =====================================================================
+        // 访问码透传
+        //
+        // 控制台现已启用随机访问码鉴权：所有 HTTP 请求与 WebSocket 握手都必须携带
+        // 正确的 code，否则服务端返回 401 / 拒绝握手。
+        //
+        // 打开方式为 http://<IP>:8888/?code=XXXXXX （二维码与面板地址均已带上），
+        // 这里把它读取出来，并在建立每条 WebSocket 时自动附加，无需用户手工填写。
+        // =====================================================================
+        (function () {
+            function readAccessCode() {
+                try {
+                    var params = new URLSearchParams(window.location.search);
+                    return params.get('code') || '';
+                } catch (e) {
+                    return '';
+                }
+            }
+            window.ACCESS_CODE = readAccessCode();
+
+            // 给 ws:// 地址补上 ?code=xxx（若已有查询串则用 & 拼接）
+            window.withAccessCode = function (url) {
+                if (!window.ACCESS_CODE) return url;
+                return url + (url.indexOf('?') >= 0 ? '&' : '?') + 'code=' + encodeURIComponent(window.ACCESS_CODE);
+            };
+        })();
+    </script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -281,7 +309,7 @@
 
                 // 发送命令到服务器
                 function sendCommand(cmd) {
-                    fetch('/control', {
+                    fetch(window.withAccessCode('/control'), {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -308,7 +336,7 @@
 
                 // 检查当前状态
                 function checkStatus() {
-                    fetch('/control?cmd=status')
+                    fetch(window.withAccessCode('/control?cmd=status'))
                         .then(response => {
                             if (!response.ok) {
                                 throw new Error('状态检查失败');
@@ -330,7 +358,7 @@
                         screenSocket.close();
                     }
 
-                    const wsUrl = `ws://${window.location.hostname}:8887/screen`;
+                    const wsUrl = window.withAccessCode(`ws://${window.location.hostname}:${parseInt(window.location.port, 10) - 1}/screen`);
                     screenSocket = new WebSocket(wsUrl);
 
                     screenSocket.onopen = function () {
@@ -483,7 +511,7 @@
         <script>
             // 初始化 WebSocket 连接
             function initWebSocket() {
-                const wsUrl = `ws://${window.location.hostname}:8889/ws`;
+                const wsUrl = window.withAccessCode(`ws://${window.location.hostname}:${parseInt(window.location.port, 10) + 1}/ws`);
                 socket = new WebSocket(wsUrl);
 
                 // 连接成功时
